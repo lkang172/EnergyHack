@@ -3,4 +3,12 @@
   border: 1px solid black;
   justify-content: center;
   margin: auto;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+textarea {
+  width: 50%;
+  height: 60vh;
+  resize: none;
 }
