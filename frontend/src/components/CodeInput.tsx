@@ -5,13 +5,13 @@ import "highlight.js/styles/github-dark.css"; // Import a theme
 
 import "../App.css";
 
-const CodeInput = () => {
+const CodeInput = ({ onChange }) => {
   useEffect(() => {
     hljs.highlightAll();
   }, []);
   return (
     <>
-      <textarea />
+      <textarea onChange={onChange} />
     </>
   );
 };
