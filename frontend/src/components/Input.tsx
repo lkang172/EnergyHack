@@ -7,7 +7,11 @@ export default function Input() {
   const [gpu, setGpu] = useState("");
   const [code, setCode] = useState();
   const [response, setResponse] = useState<any>();
-
+  //Cursor parking lot :D
+  //  ___________
+  //  | | | | | |
+  //  | | | | | |
+  //  ___________
   const calculate = async () => {
     const exportData = { code: code, gpu: gpu, iterations: iterations };
     console.log("Export data: ", exportData);
