@@ -1,6 +1,5 @@
 import React from "react";
-import hljs from "highlight.js";
-import "../src/App.css";
+// import hljs from "highlight.js";
 
 const CodeInput = () => {
   return (
