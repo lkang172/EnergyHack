@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import hljs from "highlight.js";
-import "highlight.js/styles/github-dark.css";
+// import hljs from "highlight.js";
+// import "highlight.js/styles/github-dark.css";
 
 import "../App.css";
 
 const CodeInput = ({ onChange }) => {
   useEffect(() => {
-    hljs.highlightAll();
+    // hljs.highlightAll();
   }, []);
   return (
     <>

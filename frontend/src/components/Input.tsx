@@ -8,6 +8,7 @@ export default function Input() {
   const [batchSize, setBatchSize] = useState(0);
   const [gpu, setGpu] = useState("");
   const [code, setCode] = useState();
+  const [carbon, setCarbon] = useState(0);
   const [response, setResponse] = useState<any>();
   const carbon_data: Record<string, number> = carbonData;
   const gpu_data: Record<string, number> = gpuData;
@@ -75,8 +76,12 @@ export default function Input() {
                 </option>
               ))}
             </select>
-            <select name="intensityarea" className="btn btn-ptimary">
-              <option value="">Location/Area</option>
+            <select name="intensityarea" className="btn btn-ptimary" onChange={(e) => setCarbon(parseInt(e.target.value))}>
+              {Object.keys(carbon_data).map((country) => (
+                  <option key={country} value={carbon_data[country]}>
+                    {country}
+                  </option>
+                ))}
             </select>
             <button
               type="button"
@@ -89,6 +94,7 @@ export default function Input() {
               {response != null && (
                 <>
                   <p>Total energy: {response.energy} watts</p>
+                  <p>Total carbon emissions: {response.energy * carbon} gCo</p>
                   <p>
                     That's equal to {response.energy / 25000000} Taylor Swift
                     Eras Tours!
