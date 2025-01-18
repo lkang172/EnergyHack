@@ -39,6 +39,7 @@ textarea {
   resize: none;
   vertical-align: top;
   background-color: rgb(18, 18, 18);
+  border: 1px solid rgb(0, 238, 255);
   color: white;
 }
 
