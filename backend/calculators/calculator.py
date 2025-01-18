@@ -29,20 +29,32 @@ def conv_layer(kernel_size, input_channels, output_height, output_width, output_
     flops = 2 * macs
     return flops
 
-def pooling_layer(kernel_size, output_height, output_width, channels):
+def pooling_layer(kernel_size, output_size, channels, dimensions=2):
     """
     Calculate FLOPs for a pooling layer.
     Args:
     - kernel_size (int): Size of the pooling window
-    - output_height (int): Height of the output feature map
-    - output_width (int): Width of the output feature map
+    - output_size (tuple): Output size of the feature map (height, width[, depth])
     - channels (int): Number of channels
+    - dimensions (int): Number of dimensions (1, 2, or 3)
     
     Returns:
     - flops (int): Number of FLOPs
     """
-    flops = kernel_size ** 2 * output_height * output_width * channels
+    if dimensions == 1:
+        output_length = output_size[0]
+        flops = kernel_size * output_length * channels
+    elif dimensions == 2:
+        output_height, output_width = output_size
+        flops = kernel_size ** 2 * output_height * output_width * channels
+    elif dimensions == 3:
+        output_depth, output_height, output_width = output_size
+        flops = kernel_size ** 3 * output_depth * output_height * output_width * channels
+    else:
+        raise ValueError("Unsupported number of dimensions")
+    
     return flops
+
 
 def reccurent_layer(layerType, inputSize, hiddenSize, seqLength):
     """
@@ -157,6 +169,18 @@ def residual_layer(outputSize):
     flops = 2 * outputSize
     return flops
 
+def flatten_layer(inputSize):
+    """
+    Flatten typically has no compute cost (it's just a reshape).
+    
+    Args:
+    - inputSize (int): Total number of elements in the input.
+    
+    Returns:
+    - flops (int): Number of FLOPs.
+    """
+    return 0
+
 def loss_function_flops(lossType, BATCHSIZE, outputSize):
     """
     Approximate FLOPs for common loss functions (forward + backward).
@@ -184,5 +208,3 @@ def loss_function_flops(lossType, BATCHSIZE, outputSize):
         raise ValueError("Choose from 'mse', 'mae', 'crossentropy', 'hinge', or 'kl'.")
 
     return flops_per_element * BATCHSIZE * outputSize
-
-
