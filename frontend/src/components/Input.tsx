@@ -45,7 +45,7 @@ export default function Input() {
     <>
       <div className="container">
         <div className="container-2">
-          <h1>WattsTheMatter {'\u{1F914}\u{1F4A1}'}</h1>
+          <h1>WattsTheMatter</h1>
 
           <CodeInput onChange={(e: any) => setCode(e.target.value)}></CodeInput>
         </div>
