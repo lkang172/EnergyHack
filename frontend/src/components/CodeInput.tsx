@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-
 import "../App.css";
 
 const CodeInput = ({ onChange }: any) => {
