@@ -1,4 +1,3 @@
-import "bootstrap";
 import { useState } from "react";
 import CodeInput from "./CodeInput";
 import gpuData from "../../data/gpu-efficiencies.json";
@@ -18,7 +17,12 @@ export default function Input() {
   //  | | | | | |
   //  ___________
   const calculate = async () => {
-    const exportData = { code: code, gpu: gpu, datasetSize: datasetSize };
+    const exportData = {
+      code: code,
+      gpu: gpu,
+      datasetSize: datasetSize,
+      batchSize: batchSize,
+    };
     console.log("Export data: ", exportData);
     try {
       const res = await fetch("http://127.0.0.1:5000/calculate", {
@@ -39,47 +43,61 @@ export default function Input() {
   return (
     <>
       <div className="container">
-        <CodeInput onChange={(e: any) => setCode(e.target.value)}></CodeInput>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Dataset Size"
-          onChange={(e) => setDatasetSize(parseInt(e.target.value))}
-        ></input>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Batch Size"
-          onChange={(e) => setBatchSize(parseInt(e.target.value))}
-        ></input>
-        <select
-          name="gpus"
-          className="btn btn-ptimary"
-          onChange={(e) => setGpu(e.target.value)}
-        >
-        {Object.keys(gpu_data).map(gpu => (
-            <option key={gpu} value={gpu_data[gpu]}>
-              {gpu}
-            </option>
-        ))}
-        </select>
-        <select name="intensityarea" className="btn btn-ptimary">
-        {Object.keys(carbon_data).map(country => (
-            <option key={country} value={carbon_data[country]}>
-              {country}
-            </option>
-        ))}
-        </select>
-        <button type="button" className="btn btn-primary" onClick={calculate}>
-          Calculate
-        </button>
-      </div>
-      <div className="output">
-        {response != null && (
-          <>
-            <p>Total energy: {response.energy} watts</p>
-          </>
-        )}
+        <div className="container-2">
+          <h1>WattsTheMatter</h1>
+
+          <CodeInput onChange={(e: any) => setCode(e.target.value)}></CodeInput>
+        </div>
+        <div className="container-2">
+          <center>
+            <br></br>
+            <h3>Configuration</h3>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Dataset Size"
+              onChange={(e) => setDatasetSize(parseInt(e.target.value))}
+            ></input>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Batch Size"
+              onChange={(e) => setBatchSize(parseInt(e.target.value))}
+            ></input>
+            <select
+              name="gpus"
+              className="btn btn-ptimary"
+              onChange={(e) => setGpu(e.target.value)}
+            >
+              {Object.keys(gpu_data).map((gpu) => (
+                <option key={gpu} value={gpu_data[gpu]}>
+                  {gpu}
+                </option>
+              ))}
+            </select>
+            <select name="intensityarea" className="btn btn-ptimary">
+              <option value="">Location/Area</option>
+            </select>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={calculate}
+            >
+              Calculate
+            </button>
+            <div className="output">
+              {response != null && (
+                <>
+                  <p>Total energy: {response.energy} watts</p>
+                  <p>
+                    That's equal to {response.energy / 25000000} Taylor Swift
+                    Eras Tours!
+                  </p>
+                </>
+              )}
+            </div>
+          </center>
+        </div>
       </div>
     </>
   );
