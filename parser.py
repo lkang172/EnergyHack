@@ -73,17 +73,12 @@ tree = ast.parse(source_code)
 
 class ArgVisitor(ast.NodeVisitor):
     def visit_ClassDef(self, node):
-        # print(f"Class Name: {node.name}")
         self.generic_visit(node)
 
     def visit_FunctionDef(self, node):
-        # print(f"  Function Name: {node.name}")
-        
         self.generic_visit(node)
 
     def visit_Call(self, node):
-        # if isinstance(node.func, ast.Name):
-        #     print(f"    Function Call: {node.func.id}")
         if isinstance(node.func, ast.Attribute):
             print(f"    Method Call: {node.func.attr}")
         self.generic_visit(node) 
@@ -92,3 +87,8 @@ class ArgVisitor(ast.NodeVisitor):
 # Step 3: Analyze the AST
 visitor = ArgVisitor()
 visitor.visit(tree)
+
+layers = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 2, "MaxPool2d": 3, "MaxPool3d": 4, "AvgPool1d": 2, "AvgPool2d": 3, "AvgPool3d": 4, 
+          "RNN": 5, "LSTM" : 6, "GRU": 7, "ReLU": 8, "Sigmoid" : 9, "Tanh" : 10, "BatchNorm1d": 11, "BatchNorm2d": 12, "LayerNorm": 13,
+          "Dropout": 14, "Dropout2d": 15, "Dropout3d": 16, "flatten": 17, "Embedding": 18, "CrossEntropyLoss": 19, "MSELoss": 20, "SmoothL1Loss": 21, 
+          "NLLLoss": 22, "HingeEmbeddingLoss": 23, "KLDivLoss": 24, "BCELoss": 25}
