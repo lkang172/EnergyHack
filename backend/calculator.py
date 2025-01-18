@@ -1,26 +1,13 @@
-
-
-"""
-Calculate FLOPs for a multi-head attention layer.
-Args:
-- input_size (int)
-- num_heads (int)
-- batch_size (int)
-- input_sequence (int)
+from parser import layerToInt
 
 """
+    Calculate FLOPs for a dense layer.
+    Args:
+    - input_size (int): Number of input features
+    - output_size (int): Number of output features
 
-def multi_head_attention(input_size, num_heads, batch_size):
-    vectors = batch_size * input_size
-
-"""
-Calculate FLOPs for a dense layer.
-Args:
-- input_size (int): Number of input features
-- output_size (int): Number of output features
-
-Returns:
-- flops (int): Number of FLOPs
+    Returns:
+    - flops (int): Number of FLOPs
 """
 def dense_layer(input_size, output_size):
     macs = input_size * output_size
@@ -28,16 +15,16 @@ def dense_layer(input_size, output_size):
     return flops
 
 """
-Calculate FLOPs for a convolutional layer.
-Args:
-- kernel_size (int): Width and height of the kernel
-- input_channels (int): Number of input channels
-- output_height (int): Height of the output feature map
-- output_width (int): Width of the output feature map
-- output_channels (int): Number of output channels
+    Calculate FLOPs for a convolutional layer.
+    Args:
+    - kernel_size (int): Width and height of the kernel
+    - input_channels (int): Number of input channels
+    - output_height (int): Height of the output feature map
+    - output_width (int): Width of the output feature map
+    - output_channels (int): Number of output channels
 
-Returns:
-- flops (int): Number of FLOPs
+    Returns:
+    - flops (int): Number of FLOPs
 """
 
 def conv_layer_1d(kernel_size, input_channels, output_length, output_channels):
@@ -119,7 +106,7 @@ def lstm_layer(input_size, hidden_size, seq_length):
     
     Returns:
     - flops (int): Number of FLOPs
-    """
+"""
 def gru_layer(input_size, hidden_size, seq_length):
     macs = 3 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size) * seq_length
     flops = 2 * macs
@@ -127,14 +114,14 @@ def gru_layer(input_size, hidden_size, seq_length):
 
 
 """
-Calculate the number of FLOPs for an activation function.
+    Calculate the number of FLOPs for an activation function.
 
-Args:
-- activationType (str): Type of activation function ('relu', 'sigmoid', 'tanh').
-- outputSize (int): Total number of elements in the output tensor.
+    Args:
+    - activationType (str): Type of activation function ('relu', 'sigmoid', 'tanh').
+    - outputSize (int): Total number of elements in the output tensor.
 
-Returns:
-- flops (int): Number of FLOPs.
+    Returns:
+    - flops (int): Number of FLOPs.
 """
 
 def relu_activation(output_size):
@@ -181,6 +168,12 @@ def layer_norm_flops(batchSize, seqLength, embedDim):
 def dropout_layer(outputSize):
     flops = 2 * outputSize
     return flops
+
+""""
+Dropout 1D: 
+- 
+"""
+
 
 """
     Flatten typically has no compute cost (it's just a reshape).
@@ -234,22 +227,23 @@ def flatten_layer(inputSize):
     Returns:
     - flops (int): Estimated total FLOPs
 """
-def loss_function_flops(lossType, BATCHSIZE, outputSize):
-    lossType = lossType.lower()
-    if lossType == 'mse':
-        flops_per_element = 4
-    elif lossType == 'mae':
-        flops_per_element = 4
-    elif lossType == 'crossentropy':
-        flops_per_element = 6
-    elif lossType == 'hinge':
-        flops_per_element = 6
-    elif lossType == 'kl':
-        flops_per_element = 6
-    else:
-        raise ValueError("Choose from 'mse', 'mae', 'crossentropy', 'hinge', or 'kl'.")
+def MSELoss():
+    pass
 
-    return flops_per_element * BATCHSIZE * outputSize
+def SmoothL1Loss():
+    pass
+
+def NLLLoss():
+    pass
+
+def HingeEmbeddingLoss():
+    pass
+
+def KLDivLoss():
+    pass
+
+def BCELoss():
+    pass
 
 layertoInt = {
     "dense_layer": 0,
@@ -320,30 +314,51 @@ for layer_name, layerIndex in layertoInt.items():
             case 6:
                 total_flops += pooling_layer_3d(*params)
             case 7:
-                total_flops += rnn_layer(*params)
+                total_flops += pooling_layer_1d(*params)
             case 8:
-                total_flops += lstm_layer(*params)
+                total_flops += pooling_layer_2d(*params)
             case 9:
-                total_flops += gru_layer(*params)
+                total_flops += pooling_layer_3d(*params)
             case 10:
-                total_flops += relu_activation(*params)
+                total_flops += rnn_layer(*params)
             case 11:
-                total_flops += sigmoid_activation(*params)
+                total_flops += lstm_layer(*params)
             case 12:
-                total_flops += tanh_activation(*params)
+                total_flops += gru_layer(*params)
             case 13:
-                total_flops += batch_norm_1d_flops(*params)
+                total_flops += relu_activation(*params)
             case 14:
-                total_flops += batch_norm_2d_flops(*params)
+                total_flops += sigmoid_activation(*params)
             case 15:
-                total_flops += layer_norm_flops(*params)
+                total_flops += tanh_activation(*params)
             case 16:
-                total_flops += dropout_layer(*params)
+                total_flops += batch_norm_1d_flops(*params)
             case 17:
-                total_flops += flatten_layer(*params)
+                total_flops += batch_norm_2d_flops(*params)
             case 18:
-                total_flops += embedding_layer(*params)
+                total_flops += layer_norm_flops(*params)
             case 19:
-                total_flops += residual_layer(*params)
+
             case 20:
-                total_flops += loss_function_flops(*params)
+
+            case 21:
+
+            case 22:
+                total_flops += flatten_layer(*params)
+            case 23:
+                total_flops += embedding_layer(*params)
+            case 24:
+
+            case 25:
+
+            case 26:
+
+            case 27:
+
+            case 28:
+
+            case 29:
+
+            case 30:
+
+

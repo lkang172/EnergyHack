@@ -81,6 +81,10 @@ class ArgVisitor(ast.NodeVisitor):
     def visit_Call(self, node):
         if isinstance(node.func, ast.Attribute):
             print(f"    Method Call: {node.func.attr}")
+            layer_name = node.func.attr
+            if layer_name in layerToInt:
+                for arg in node.args:
+                    intToParams[layerToInt[layer_name]].append(arg)
         self.generic_visit(node) 
 
 
@@ -88,7 +92,12 @@ class ArgVisitor(ast.NodeVisitor):
 visitor = ArgVisitor()
 visitor.visit(tree)
 
-layers = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 2, "MaxPool2d": 3, "MaxPool3d": 4, "AvgPool1d": 2, "AvgPool2d": 3, "AvgPool3d": 4, 
-          "RNN": 5, "LSTM" : 6, "GRU": 7, "ReLU": 8, "Sigmoid" : 9, "Tanh" : 10, "BatchNorm1d": 11, "BatchNorm2d": 12, "LayerNorm": 13,
-          "Dropout": 14, "Dropout2d": 15, "Dropout3d": 16, "flatten": 17, "Embedding": 18, "CrossEntropyLoss": 19, "MSELoss": 20, "SmoothL1Loss": 21, 
-          "NLLLoss": 22, "HingeEmbeddingLoss": 23, "KLDivLoss": 24, "BCELoss": 25}
+layerToInt = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 4, "MaxPool2d": 5, "MaxPool3d": 6, "AvgPool1d": 7, "AvgPool2d": 8, "AvgPool3d": 9, 
+          "RNN": 10, "LSTM" : 11, "GRU": 12, "ReLU": 13, "Sigmoid" : 14, "Tanh" : 15, "BatchNorm1d": 16, "BatchNorm2d": 17, "LayerNorm": 18,
+          "Dropout": 19, "Dropout2d": 20, "Dropout3d": 21, "flatten": 22, "Embedding": 23, "CrossEntropyLoss": 24, "MSELoss": 25, "SmoothL1Loss": 26, 
+          "NLLLoss": 27, "HingeEmbeddingLoss": 28, "KLDivLoss": 29, "BCELoss": 30}
+
+intToParams = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: [], 16: [], 17: [], 
+               18: [], 19: [], 20: [], 21: [], 22: [], 23: [], 24: [], 25: [], 26: [], 27: [], 28: [], 29: [], 31: []}
+
+print(intToParams)
