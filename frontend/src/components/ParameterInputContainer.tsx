@@ -1,15 +1,19 @@
 import "bootstrap";
 import { useState } from "react";
+import CodeInput from "../components/CodeInput";
 
 interface ParametersProps {
-    calculate : Function
+  calculate: Function;
 }
 
-export default function ParameterInputContainer({calculate}: ParametersProps) {
-    const [iterations, setIterations] = useState(0);
+export default function ParameterInputContainer({
+  calculate,
+}: ParametersProps) {
+  const [iterations, setIterations] = useState(0);
 
   return (
-    <div>
+    <div className="container">
+      <CodeInput></CodeInput>
       <input
         type="text"
         className="form-control"

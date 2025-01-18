@@ -9,10 +9,7 @@ function App() {
   };
   return (
     <>
-      <div className="container">
-        <CodeInput></CodeInput>
-        <ParameterInputContainer calculate={}></ParameterInputContainer>
-      </div>
+      <ParameterInputContainer></ParameterInputContainer>
     </>
   );
 
