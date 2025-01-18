@@ -12,25 +12,35 @@ def dense_layer(input_size, output_size):
     flops = 2 * macs 
     return flops
 
-def conv_layer(kernel_size, input_channels, output_height, output_width, output_channels):
-    """
-    Calculate FLOPs for a convolutional layer.
-    Args:
-    - kernel_size (int): Width and height of the kernel
-    - input_channels (int): Number of input channels
-    - output_height (int): Height of the output feature map
-    - output_width (int): Width of the output feature map
-    - output_channels (int): Number of output channels
-    
-    Returns:
-    - flops (int): Number of FLOPs
-    """
+"""
+Calculate FLOPs for a convolutional layer.
+Args:
+- kernel_size (int): Width and height of the kernel
+- input_channels (int): Number of input channels
+- output_height (int): Height of the output feature map
+- output_width (int): Width of the output feature map
+- output_channels (int): Number of output channels
+
+Returns:
+- flops (int): Number of FLOPs
+"""
+
+def conv_layer_1d(kernel_size, input_channels, output_length, output_channels):
+    macs = kernel_size * input_channels * output_length * output_channels
+    flops = 2 * macs
+    return flops
+
+def conv_layer_2d(kernel_size, input_channels, output_height, output_width, output_channels):
     macs = (kernel_size ** 2) * input_channels * output_height * output_width * output_channels
     flops = 2 * macs
     return flops
 
-def pooling_layer(kernel_size, output_size, channels, dimensions=2):
-    """
+def conv_layer_3d(kernel_size, input_channels, output_depth, output_height, output_width, output_channels):
+    macs = (kernel_size ** 3) * input_channels * output_depth * output_height * output_width * output_channels
+    flops = 2 * macs
+    return flops
+
+"""
     Calculate FLOPs for a pooling layer.
     Args:
     - kernel_size (int): Size of the pooling window
@@ -40,63 +50,87 @@ def pooling_layer(kernel_size, output_size, channels, dimensions=2):
     
     Returns:
     - flops (int): Number of FLOPs
-    """
-    if dimensions == 1:
-        output_length = output_size[0]
-        flops = kernel_size * output_length * channels
-    elif dimensions == 2:
-        output_height, output_width = output_size
-        flops = kernel_size ** 2 * output_height * output_width * channels
-    elif dimensions == 3:
-        output_depth, output_height, output_width = output_size
-        flops = kernel_size ** 3 * output_depth * output_height * output_width * channels
-    else:
-        raise ValueError("Unsupported number of dimensions")
-    
+"""
+
+def pooling_layer_1d(kernel_size, output_length, channels):
+    flops = kernel_size * output_length * channels
     return flops
 
+def pooling_layer_2d(kernel_size, output_height, output_width, channels):
+    flops = kernel_size ** 2 * output_height * output_width * channels
+    return flops
 
-def reccurent_layer(layerType, inputSize, hiddenSize, seqLength):
+def pooling_layer_3d(kernel_size, output_depth, output_height, output_width, channels):
+    flops = kernel_size ** 3 * output_depth * output_height * output_width * channels
+    return flops
+
+def rnn_layer(input_size, hidden_size, seq_length):
     """
-    Calculate the number of FLOPs for a recurrent layer (LSTM or GRU).
-    
+    Calculate FLOPs for a basic RNN layer.
     Args:
-    - layerType (str): Type of recurrent layer ('lstm' or 'gru').
-    - inputSize (int): Number of input features.
-    - hiddenSize (int): Number of hidden units.
-    - seqLength (int): Length of the input sequence.
+    - input_size (int): Number of input features
+    - hidden_size (int): Number of hidden units
+    - seq_length (int): Length of the input sequence
     
     Returns:
-    - flops (int): Number of FLOPs.
+    - flops (int): Number of FLOPs
     """
-    if layerType.lower() == 'lstm':
-        macs = 4 * ((inputSize * hiddenSize) + (hiddenSize * hiddenSize) + hiddenSize) * seqLength
-    elif layerType.lower() == 'gru':
-        macs = 3 * ((inputSize * hiddenSize) + (hiddenSize * hiddenSize) + hiddenSize) * seqLength
-    
+    macs = ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size) * seq_length
     flops = 2 * macs
     return flops
 
-def activation_layer(activationType, outputSize):
+def lstm_layer(input_size, hidden_size, seq_length):
     """
-    Calculate the number of FLOPs for an activation function.
-    
+    Calculate FLOPs for an LSTM layer.
     Args:
-    - activationType (str): Type of activation function ('relu', 'sigmoid', 'tanh').
-    - outputSize (int): Total number of elements in the output tensor.
+    - input_size (int): Number of input features
+    - hidden_size (int): Number of hidden units
+    - seq_length (int): Length of the input sequence
     
     Returns:
-    - flops (int): Number of FLOPs.
+    - flops (int): Number of FLOPs
     """
-    if activationType.lower() == 'relu':
-        flops = outputSize  # 1 FLOP per element
-    elif activationType.lower() == 'sigmoid':
-        flops = 4 * outputSize  # 4 FLOPs per element
-    elif activationType.lower() == 'tanh':
-        flops = 6 * outputSize  # 6 FLOPs per element
-    else:
-        raise ValueError("activationType must be 'relu', 'sigmoid', or 'tanh'")
+    macs = 4 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size) * seq_length
+    flops = 2 * macs
+    return flops
+
+def gru_layer(input_size, hidden_size, seq_length):
+    """
+    Calculate FLOPs for a GRU layer.
+    Args:
+    - input_size (int): Number of input features
+    - hidden_size (int): Number of hidden units
+    - seq_length (int): Length of the input sequence
     
+    Returns:
+    - flops (int): Number of FLOPs
+    """
+    macs = 3 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size) * seq_length
+    flops = 2 * macs
+    return flops
+
+
+"""
+Calculate the number of FLOPs for an activation function.
+
+Args:
+- activationType (str): Type of activation function ('relu', 'sigmoid', 'tanh').
+- outputSize (int): Total number of elements in the output tensor.
+
+Returns:
+- flops (int): Number of FLOPs.
+"""
+
+def relu_activation(output_size):
+    flops = output_size  # 1 FLOP per element
+    return flops
+
+def sigmoid_activation(output_size):
+    flops = 4 * output_size  # 4 FLOPs per element
+    return flops
+
+def tanh_activation(output_size):
+    flops = 6 * output_size  # 6 FLOPs per element
     return flops
 
 def batch_norm_layer(batchSize, numFeatures):
@@ -209,10 +243,8 @@ def loss_function_flops(lossType, BATCHSIZE, outputSize):
 
     return flops_per_element * BATCHSIZE * outputSize
 
-
-
 layertoInt = {"dense_layer": 0, "conv_layer": 1, "pooling_layer": 2, "reccurent_layer": 3, "activation_layer": 4, "batch_norm_layer": 5, "dropout_layer": 6, "flatten_layer": 7, "embedding_layer": 8, "residual_layer": 9, "loss_function_flops": 10}
-intToParam = {0: [[12, 34], [34, 22], [23, 22]], 1: [[1, 2, 3, 4, 5], [45, 23, 12, 23, 45]], 2: [[1, 34, 123, 186], [34, 23, 65, 23]], 3: [[1, 2, 3, 4], [23, 23, 23, 23]], 4: [[1, 2], [23, 23]], 5: [[1, 2], [23, 23]], 6: [[1], [23]], 7: [[1], [23]], 8: [[1, 2, 3], [23, 23, 23]], 9: [[1], [23]], 10: [[1, 2, 3], [23, 23, 23]]}
+intToParam = {0: [[12, 34], [34, 22], [23, 22]], 1: [[1, 2, 3, 4, 5], [45, 23, 12, 23, 45]], 2: [[1, 34, 123, 186], [34, 23, 65, 23]], 3: [['lstm', 1, 2, 3], ['gru', 23, 23, 23]], 4: [['relu', 23], ['sigmoid', 23]], 5: [[1, 2], [23, 23]], 6: [[23], [23]], 7: [[23], [23]], 8: [[1, 2, 3], [23, 23, 23]], 9: [[23], [23]], 10: [['mse', 1, 2], ['crossentropy', 23, 23]]}
 total_flops = 0
 
 for layer_name, layerIndex in layertoInt.items():
