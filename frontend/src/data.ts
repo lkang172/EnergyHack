@@ -1,4 +1,4 @@
-const gpu_data = {
+const gpu_data : Record<string, number> = {
   "GeForce GTX 580": 6.48,
   "GeForce GTX 590": 6.82,
   "GeForce GTX 680": 15.85,

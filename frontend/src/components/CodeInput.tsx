@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import hljs from "highlight.js";
-import "highlight.js/styles/github-dark.css"; // Import a theme
+// import hljs from "highlight.js";
+// import "highlight.js/styles/github-dark.css"; // Import a theme
 
 import "../App.css";
 
 const CodeInput = ({ onChange }) => {
   const [code, setCode] = useState(false);
   useEffect(() => {
-    hljs.highlightAll();
-  }, [setCode]);
+    // hljs.highlightAll();
+  }, []);
   return (
     <>
       {code && (

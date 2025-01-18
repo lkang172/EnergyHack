@@ -12,7 +12,7 @@ def calculate_energy(data):
 @app.route('/calculate', methods=['POST']) 
 def get_calculation():
     data = request.get_json()
-
+    
     return(calculate_energy(data))
 
 

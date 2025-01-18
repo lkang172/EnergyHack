@@ -53,7 +53,13 @@ export default function Input() {
           name="gpus"
           className="btn btn-ptimary"
           onChange={(e) => setGpu(e.target.value)}
-        ></select>
+        >
+          {Object.keys(gpu_data).map((gpu) => (
+            <option key={gpu} value={gpu_data[gpu]}>
+              {gpu}
+            </option>
+          ))}
+        </select>
         <select name="intensityarea" className="btn btn-ptimary">
           <option value="">Location/Area</option>
         </select>
