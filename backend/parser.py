@@ -88,7 +88,7 @@ class ArgVisitor(ast.NodeVisitor):
 visitor = ArgVisitor()
 visitor.visit(tree)
 
-layers = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 2, "MaxPool2d": 3, "MaxPool3d": 4, "AvgPool1d": 2, "AvgPool2d": 3, "AvgPool3d": 4, 
+layerToInt = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 2, "MaxPool2d": 3, "MaxPool3d": 4, "AvgPool1d": 2, "AvgPool2d": 3, "AvgPool3d": 4, 
           "RNN": 5, "LSTM" : 6, "GRU": 7, "ReLU": 8, "Sigmoid" : 9, "Tanh" : 10, "BatchNorm1d": 11, "BatchNorm2d": 12, "LayerNorm": 13,
           "Dropout": 14, "Dropout2d": 15, "Dropout3d": 16, "flatten": 17, "Embedding": 18, "CrossEntropyLoss": 19, "MSELoss": 20, "SmoothL1Loss": 21, 
           "NLLLoss": 22, "HingeEmbeddingLoss": 23, "KLDivLoss": 24, "BCELoss": 25}
