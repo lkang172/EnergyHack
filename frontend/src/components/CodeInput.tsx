@@ -9,7 +9,7 @@ const CodeInput = ({ onChange }) => {
   const [code, setCode] = useState(false);
   useEffect(() => {
     hljs.highlightAll();
-  }, []);
+  }, [setCode]);
   return (
     <>
       {code && (
@@ -56,6 +56,7 @@ test_dataset = datasets.MNIST(root='./data', train=False, transform=transform, d
           </pre>
         </>
       )}
+
       <textarea onChange={onChange}></textarea>
       <button onClick={() => setCode(true)}>Submit</button>
     </>
