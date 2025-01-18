@@ -1,7 +1,8 @@
 import "bootstrap";
 import { useState } from "react";
 import CodeInput from "./CodeInput";
-import gpu_data from "../data.ts";
+import gpuData from "../../data/gpu-efficiencies.json";
+import carbonData from "../../data/carbon-intensities.json";
 
 export default function Input() {
   const [datasetSize, setDatasetSize] = useState(0);
@@ -9,6 +10,8 @@ export default function Input() {
   const [gpu, setGpu] = useState("");
   const [code, setCode] = useState();
   const [response, setResponse] = useState<any>();
+  const carbon_data: Record<string, number> = carbonData;
+  const gpu_data: Record<string, number> = gpuData;
   //Cursor parking lot :D
   //  ___________
   //  | | | | | |
@@ -61,7 +64,11 @@ export default function Input() {
         ))}
         </select>
         <select name="intensityarea" className="btn btn-ptimary">
-          <option value="">Location/Area</option>
+        {Object.keys(carbon_data).map(country => (
+            <option key={country} value={carbon_data[country]}>
+              {country}
+            </option>
+        ))}
         </select>
         <button type="button" className="btn btn-primary" onClick={calculate}>
           Calculate
