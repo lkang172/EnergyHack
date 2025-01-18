@@ -5,8 +5,8 @@ app = Flask(__name__)
 CORS(app)
 
 def calculate_energy(data):
-    total_flops = 20 * 10**10
-    energy = ((total_flops / 10**9) / float(data['gpu'])) * float(data['iterations'])
+    total_flops = 20 * 10**10 #replace with their function, which outputs total flops
+    energy = ((total_flops / 10**9) / float(data['gpu'])) * float(data['batchSize']) * float(data['datasetSize'])
     return {"energy": energy}
   
 @app.route('/calculate', methods=['POST']) 
