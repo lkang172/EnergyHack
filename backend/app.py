@@ -6,7 +6,7 @@ CORS(app)
 
 def calculate_energy(data):
     total_flops = 20 * 10**10 #replace with their function, which outputs total flops
-    energy = ((total_flops / 10**9) / float(data['gpu'])) * float(data['batchSize']) * float(data['datasetSize'])
+    energy = ((total_flops / 10**9) / float(data['gpu'])) * (float(data['datasetSize']) / float(data['batchSize']))
     return {"energy": energy}
   
 @app.route('/calculate', methods=['POST']) 
