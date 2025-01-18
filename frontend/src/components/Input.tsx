@@ -70,6 +70,7 @@ export default function Input() {
               className="btn btn-ptimary"
               onChange={(e) => setGpu(e.target.value)}
             >
+              <option>(Select GPU)</option>
               {Object.keys(gpu_data).map((gpu) => (
                 <option key={gpu} value={gpu_data[gpu]}>
                   {gpu}
@@ -77,6 +78,7 @@ export default function Input() {
               ))}
             </select>
             <select name="intensityarea" className="btn btn-ptimary" onChange={(e) => setCarbon(parseInt(e.target.value))}>
+              <option>(Select Region)</option>
               {Object.keys(carbon_data).map((country) => (
                   <option key={country} value={carbon_data[country]}>
                     {country}
