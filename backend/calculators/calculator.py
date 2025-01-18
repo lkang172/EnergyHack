@@ -133,8 +133,7 @@ def tanh_activation(output_size):
     flops = 6 * output_size  # 6 FLOPs per element
     return flops
 
-def batch_norm_layer(batchSize, numFeatures):
-    """
+"""
     Calculate the approximate number of FLOPs for a batch normalization layer (forward + backward).
 
     Args:
@@ -143,9 +142,16 @@ def batch_norm_layer(batchSize, numFeatures):
 
     Returns:
     - flops (int): Approximate total FLOPs.
-    """
-    flops = 2 * batchSize * numFeatures
-    return flops
+"""
+
+def batch_norm_1d_flops(batchSize, numFeatures):
+    return 2 * batchSize * numFeatures
+
+def batch_norm_2d_flops(batchSize, channels, height, width):
+    return 2 * batchSize * channels * height * width
+
+def layer_norm_flops(batchSize, seqLength, embedDim):
+    return 2 * batchSize * seqLength * embedDim
 
 def dropout_layer(outputSize):
     """
