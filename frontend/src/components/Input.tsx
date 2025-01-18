@@ -54,7 +54,7 @@ export default function Input() {
           className="btn btn-ptimary"
           onChange={(e) => setGpu(e.target.value)}
         >
-          {return Object.keys(gpu_data).forEach(gpu => (
+        {Object.keys(gpu_data).map(gpu => (
             <option key={gpu} value={gpu_data[gpu]}>
               {gpu}
             </option>
