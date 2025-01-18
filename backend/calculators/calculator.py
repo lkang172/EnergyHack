@@ -1,13 +1,28 @@
+
+
+"""
+Calculate FLOPs for a multi-head attention layer.
+Args:
+- input_size (int)
+- num_heads (int)
+- batch_size (int)
+- input_sequence (int)
+
+"""
+
+def multi_head_attention(input_size, num_heads, batch_size):
+    vectors = batch_size * input_size
+
+"""
+Calculate FLOPs for a dense layer.
+Args:
+- input_size (int): Number of input features
+- output_size (int): Number of output features
+
+Returns:
+- flops (int): Number of FLOPs
+"""
 def dense_layer(input_size, output_size):
-    """
-    Calculate FLOPs for a dense layer.
-    Args:
-    - input_size (int): Number of input features
-    - output_size (int): Number of output features
-    
-    Returns:
-    - flops (int): Number of FLOPs
-    """
     macs = input_size * output_size
     flops = 2 * macs 
     return flops
@@ -64,8 +79,7 @@ def pooling_layer_3d(kernel_size, output_depth, output_height, output_width, cha
     flops = kernel_size ** 3 * output_depth * output_height * output_width * channels
     return flops
 
-def rnn_layer(input_size, hidden_size, seq_length):
-    """
+"""
     Calculate FLOPs for a basic RNN layer.
     Args:
     - input_size (int): Number of input features
@@ -74,13 +88,13 @@ def rnn_layer(input_size, hidden_size, seq_length):
     
     Returns:
     - flops (int): Number of FLOPs
-    """
+"""
+def rnn_layer(input_size, hidden_size, seq_length):
     macs = ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size) * seq_length
     flops = 2 * macs
     return flops
 
-def lstm_layer(input_size, hidden_size, seq_length):
-    """
+"""
     Calculate FLOPs for an LSTM layer.
     Args:
     - input_size (int): Number of input features
@@ -89,13 +103,14 @@ def lstm_layer(input_size, hidden_size, seq_length):
     
     Returns:
     - flops (int): Number of FLOPs
-    """
+"""
+def lstm_layer(input_size, hidden_size, seq_length):
+
     macs = 4 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size) * seq_length
     flops = 2 * macs
     return flops
 
-def gru_layer(input_size, hidden_size, seq_length):
-    """
+"""
     Calculate FLOPs for a GRU layer.
     Args:
     - input_size (int): Number of input features
@@ -105,6 +120,7 @@ def gru_layer(input_size, hidden_size, seq_length):
     Returns:
     - flops (int): Number of FLOPs
     """
+def gru_layer(input_size, hidden_size, seq_length):
     macs = 3 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size) * seq_length
     flops = 2 * macs
     return flops
@@ -153,8 +169,7 @@ def batch_norm_2d_flops(batchSize, channels, height, width):
 def layer_norm_flops(batchSize, seqLength, embedDim):
     return 2 * batchSize * seqLength * embedDim
 
-def dropout_layer(outputSize):
-    """
+"""
     Approximate FLOPs for a Dropout layer (forward + backward).
     
     Args:
@@ -162,12 +177,12 @@ def dropout_layer(outputSize):
     
     Returns:
     - flops (int): Number of FLOPs.
-    """
+"""
+def dropout_layer(outputSize):
     flops = 2 * outputSize
     return flops
 
-def flatten_layer(inputSize):
-    """
+"""
     Flatten typically has no compute cost (it's just a reshape).
     
     Args:
@@ -175,11 +190,11 @@ def flatten_layer(inputSize):
     
     Returns:
     - flops (int): Number of FLOPs.
-    """
+"""
+def flatten_layer(inputSize):
     return 0
 
-def embedding_layer(batchSize, seqLength, embedDim):
-    """
+"""
     Naive FLOPs for an Embedding layer (forward pass).
     Real embedding ops are often just lookups, but this 
     assumes a naive multiplication-based approach.
@@ -191,26 +206,12 @@ def embedding_layer(batchSize, seqLength, embedDim):
     
     Returns:
     - flops (int): Number of FLOPs.
-    """
+"""
+def embedding_layer(batchSize, seqLength, embedDim):
     flops = batchSize * seqLength * embedDim
     return flops
 
-def residual_layer(outputSize):
-    """
-    Approximate FLOPs for a simple residual skip connection
-    (adding two tensors of the same shape).
-    
-    Args:
-    - outputSize (int): Total number of elements in the output.
-    
-    Returns:
-    - flops (int): Number of FLOPs.
-    """
-    flops = 2 * outputSize
-    return flops
-
-def flatten_layer(inputSize):
-    """
+"""
     Flatten typically has no compute cost (it's just a reshape).
     
     Args:
@@ -218,11 +219,11 @@ def flatten_layer(inputSize):
     
     Returns:
     - flops (int): Number of FLOPs.
-    """
+"""
+def flatten_layer(inputSize):
     return 0
 
-def loss_function_flops(lossType, BATCHSIZE, outputSize):
-    """
+"""
     Approximate FLOPs for common loss functions (forward + backward).
     
     Args:
@@ -232,7 +233,8 @@ def loss_function_flops(lossType, BATCHSIZE, outputSize):
     
     Returns:
     - flops (int): Estimated total FLOPs
-    """
+"""
+def loss_function_flops(lossType, BATCHSIZE, outputSize):
     lossType = lossType.lower()
     if lossType == 'mse':
         flops_per_element = 4
