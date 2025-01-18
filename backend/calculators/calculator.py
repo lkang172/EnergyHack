@@ -208,3 +208,36 @@ def loss_function_flops(lossType, BATCHSIZE, outputSize):
         raise ValueError("Choose from 'mse', 'mae', 'crossentropy', 'hinge', or 'kl'.")
 
     return flops_per_element * BATCHSIZE * outputSize
+
+
+
+layertoInt = {"dense_layer": 0, "conv_layer": 1, "pooling_layer": 2, "reccurent_layer": 3, "activation_layer": 4, "batch_norm_layer": 5, "dropout_layer": 6, "flatten_layer": 7, "embedding_layer": 8, "residual_layer": 9, "loss_function_flops": 10}
+intToParam = {0: [[12, 34], [34, 22], [23, 22]], 1: [[1, 2, 3, 4, 5], [45, 23, 12, 23, 45]], 2: [[1, 34, 123, 186], [34, 23, 65, 23]], 3: [[1, 2, 3, 4], [23, 23, 23, 23]], 4: [[1, 2], [23, 23]], 5: [[1, 2], [23, 23]], 6: [[1], [23]], 7: [[1], [23]], 8: [[1, 2, 3], [23, 23, 23]], 9: [[1], [23]], 10: [[1, 2, 3], [23, 23, 23]]}
+total_flops = 0
+
+for layer_name, layerIndex in layertoInt.items():
+    params_list = intToParam[layerIndex]
+    for params in params_list:
+        match layerIndex:
+            case 0:
+                total_flops += dense_layer(*params)
+            case 1:
+                total_flops += conv_layer(*params)
+            case 2:
+                total_flops += pooling_layer(*params)
+            case 3:
+                total_flops += reccurent_layer(*params)
+            case 4:
+                total_flops += activation_layer(*params)
+            case 5:
+                total_flops += batch_norm_layer(*params)
+            case 6:
+                total_flops += dropout_layer(*params)
+            case 7:
+                total_flops += flatten_layer(*params)
+            case 8:
+                total_flops += embedding_layer(*params)
+            case 9:
+                total_flops += residual_layer(*params)
+            case 10:
+                total_flops += loss_function_flops(*params)
