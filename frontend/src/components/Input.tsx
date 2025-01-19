@@ -40,7 +40,6 @@ export default function Input() {
     }
   };
 
-  //add dataset size and batch size inputs
   return (
     <>
       <div className="container">
@@ -77,14 +76,19 @@ export default function Input() {
                 </option>
               ))}
             </select>
-            <select name="intensityarea" className="btn btn-ptimary" onChange={(e) => setCarbon(parseInt(e.target.value))}>
+            <select
+              name="intensityarea"
+              className="btn btn-ptimary"
+              onChange={(e) => setCarbon(parseInt(e.target.value))}
+            >
               <option>(Select Region)</option>
               {Object.keys(carbon_data).map((country) => (
-                  <option key={country} value={carbon_data[country]}>
-                    {country}
-                  </option>
-                ))}
+                <option key={country} value={carbon_data[country]}>
+                  {country}
+                </option>
+              ))}
             </select>
+            <br></br>
             <button
               type="button"
               className="btn btn-primary"
