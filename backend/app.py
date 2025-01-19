@@ -60,22 +60,21 @@ def createFCModel(self):
 
 
 def calculate_energy(data):
-    parsed_data = parse_function(data)
-    calculator = Calculator(parsed_data, 3)
+    parsed_data = parse_function(data['code'])
+    calculator = Calculator(parsed_data, data['batchSize'])
     total_flops = calculator.calculate()
-    print(total_flops)
-    # energy = ((total_flops / 10**9) / float(data['gpu'])) * (float(data['datasetSize']) / float(data['batchSize']))
-    # return {"energy": energy}
+    print("Total flops: " + str(total_flops))
+    energy = ((total_flops / 10**9) / float(data['gpu'])) * (float(data['datasetSize']) / float(data['batchSize']))
+    return {"energy": energy}
   
-# @app.route('/calculate', methods=['POST']) 
-# def get_calculation():
-#     data = request.get_json()
+@app.route('/calculate', methods=['POST']) 
+def get_calculation():
+    data = request.get_json()
     
-#     return(calculate_energy(data))
+    return(calculate_energy(data))
 
 
   
-# if __name__ == "__main__": 
-#     app.run(debug=True)
+if __name__ == "__main__": 
+    app.run(debug=True)
 
-calculate_energy(dummy_data)
