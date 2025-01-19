@@ -169,7 +169,7 @@ class Calculator:
         Calculate the approximate number of FLOPs for a batch normalization layer (forward + backward).
 
         Args:
-        - batch_size (int): Number of samples in the batch.
+        - batchSize (int): Number of samples in the batch.
         - numFeatures (int): Number of features per sample (e.g., channels x spatial dimensions).
 
         Returns:
@@ -177,13 +177,13 @@ class Calculator:
     """
 
     def batch_norm_1d_flops(self, numFeatures):
-        return 2 * self.batch_size * numFeatures
+        return 2 * self.batchSize * numFeatures
 
-    def batch_norm_2d_flops(self, channels, height, width):
-        return 2 * self.batch_size * channels * height * width
+    def batch_norm_2d_flops(self, numFeatures):
+        return 2 * self.batchSize * numFeatures **2
 
-    def layer_norm_flops(self, seqLength, embedDim):
-        return 2 * self.batch_size * seqLength * embedDim
+    def batch_norm_3d_flops(self, numFeatures):
+        return 2 * self.batchSize * numFeatures ** 3
 
     """
         Approximate FLOPs for a Dropout layer (forward + backward).
@@ -194,6 +194,14 @@ class Calculator:
         Returns:
         - flops (int): Number of FLOPs.
     """
+    def dropout_layer(self):
+        flops = 3 * self.output_size
+        return flops
+    
+    def dropout_layer(self):
+        flops = 3 * self.output_size
+        return flops
+    
     def dropout_layer(self):
         flops = 3 * self.output_size
         return flops
@@ -216,7 +224,7 @@ class Calculator:
         assumes a naive multiplication-based approach.
         
         Args:
-        - batch_size (int): Number of samples in the batch.
+        - batchSize (int): Number of samples in the batch.
         - seqLength (int): Number of tokens or elements in each sample.
         - embedDim (int): Size of each embedding vector.
         
@@ -244,19 +252,19 @@ class Calculator:
         
         Args:
         - lossType (str): 'mse', 'mae', 'crossentropy', 'hinge', or 'kl'
-        - batch_size (int): Number of samples in the batch
+        - BATCHSIZE (int): Number of samples in the batch
         - outputSize (int): Number of outputs per sample
         
         Returns:
         - flops (int): Estimated total FLOPs
     """
+    def CrossEntropyLoss(self, ):
+        pass
+
     def MSELoss(self, ):
         pass
 
     def SmoothL1Loss(self, ):
-        pass
-
-    def NLLLoss(self, ):
         pass
 
     def HingeEmbeddingLoss(self, ):
@@ -283,58 +291,60 @@ class Calculator:
                     case 3:
                         self.total_flops += self.conv_layer_3d(*params)
                     case 4:
-                        self.total_flops += self.pooling_layer_1d(*params)
+                        self.total_flops += pooling_layer_1d(*params)
                     case 5:
-                        self.total_flops += self.pooling_layer_2d(*params)
+                        self.total_flops += pooling_layer_2d(*params)
                     case 6:
-                        self.total_flops += self.pooling_layer_3d(*params)
+                        self.total_flops += pooling_layer_3d(*params)
                     case 7:
-                        self.total_flops += self.pooling_layer_1d(*params)
+                        self.total_flops += pooling_layer_1d(*params)
                     case 8:
-                        self.total_flops += self.pooling_layer_2d(*params)
+                        self.total_flops += pooling_layer_2d(*params)
                     case 9:
-                        self.total_flops += self.pooling_layer_3d(*params)
+                        self.total_flops += pooling_layer_3d(*params)
                     case 10:
-                        self.total_flops += self.rnn_layer(*params)
+                        self.total_flops += rnn_layer(*params)
                     case 11:
-                        self.total_flops += self.lstm_layer(*params)
+                        self.total_flops += lstm_layer(*params)
                     case 12:
-                        self.total_flops += self.gru_layer(*params)
+                        self.total_flops += gru_layer(*params)
                     case 13:
-                        self.total_flops += self.relu_activation(*params)
+                        self.total_flops += relu_activation(*params)
                     case 14:
-                        self.total_flops += self.sigmoid_activation(*params)
+                        self.total_flops += sigmoid_activation(*params)
                     case 15:
-                        self.total_flops += self.tanh_activation(*params)
+                        self.total_flops += tanh_activation(*params)
                     case 16:
-                        self.total_flops += self.batch_norm_1d_flops(*params)
+                        self.total_flops += batch_norm_1d_flops(*params)
                     case 17:
-                        self.total_flops += self.batch_norm_2d_flops(*params)
+                        self.total_flops += batch_norm_2d_flops(*params)
                     case 18:
-                        self.total_flops += self.layer_norm_flops(*params)
+                        self.total_flops += layer_norm_flops(*params)
                     case 19:
-
-                    # case 20:
-
-                    # case 21:
-
-                    # case 22:
-                        self.total_flops += self.flatten_layer(*params)
+                        self.total_flops += dropout_layer(*params)
+                    case 20:
+                       self.total_flops += dropout_layer(*params)
+                    case 21:
+                       self.total_flops += dropout_layer(*params)
+                    case 22:
+                        self.total_flops += flatten_layer(*params)
                     case 23:
-                        self.total_flops += self.embedding_layer(*params)
-                    # case 24:
+                        self.total_flops += embedding_layer(*params)
+                    case 24:
+                        self.total_flops += CrossEntropyLoss(*params)
+                    case 25:
+                        self.total_flops += MSELoss(*params)
+                    case 26:
+                        self.total_flops += SmoothL1Loss(*params)
+                    case 27:
+                        self.total_flops += NLLLoss(*params)
+                    case 28:
+                        self.total_flops += HingeEmbeddingLoss(*params)
+                    case 29:
+                        self.total_flops += KLDivLoss(*params)
 
-                    # case 25:
-
-                    # case 26:
-
-                    # case 27:
-
-                    # case 28:
-
-                    # case 29:
-
-                    # case 30:
+                    case 30:
+                        self.total_flops += BCELoss(*params)
         return self.total_flops
 
 
