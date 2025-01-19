@@ -1,4 +1,4 @@
-from parser import layerToInt
+from backend.parse_data import layerToInt
 
 """
     Calculate FLOPs for a dense layer.

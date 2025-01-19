@@ -67,38 +67,41 @@ class model(nn.Module):
             nn.Linear(128, 2)
         )
 """
-layerToInt = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 4, "MaxPool2d": 5, "MaxPool3d": 6, "AvgPool1d": 7, "AvgPool2d": 8, "AvgPool3d": 9, 
-          "RNN": 10, "LSTM" : 11, "GRU": 12, "ReLU": 13, "Sigmoid" : 14, "Tanh" : 15, "BatchNorm1d": 16, "BatchNorm2d": 17, "LayerNorm": 18,
-          "Dropout": 19, "Dropout2d": 20, "Dropout3d": 21, "flatten": 22, "Embedding": 23, "CrossEntropyLoss": 24, "MSELoss": 25, "SmoothL1Loss": 26, 
-          "NLLLoss": 27, "HingeEmbeddingLoss": 28, "KLDivLoss": 29, "BCELoss": 30}
+    
 
-intToParams = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: [], 16: [], 17: [], 
-               18: [], 19: [], 20: [], 21: [], 22: [], 23: [], 24: [], 25: [], 26: [], 27: [], 28: [], 29: [], 31: []}
+def parse_function(source_code):
+    layerToInt = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 4, "MaxPool2d": 5, "MaxPool3d": 6, "AvgPool1d": 7, "AvgPool2d": 8, "AvgPool3d": 9, 
+            "RNN": 10, "LSTM" : 11, "GRU": 12, "ReLU": 13, "Sigmoid" : 14, "Tanh" : 15, "BatchNorm1d": 16, "BatchNorm2d": 17, "LayerNorm": 18,
+            "Dropout": 19, "Dropout2d": 20, "Dropout3d": 21, "flatten": 22, "Embedding": 23, "CrossEntropyLoss": 24, "MSELoss": 25, "SmoothL1Loss": 26, 
+            "NLLLoss": 27, "HingeEmbeddingLoss": 28, "KLDivLoss": 29, "BCELoss": 30}
 
-tree = ast.parse(source_code)
+    intToParams = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: [], 16: [], 17: [], 
+                18: [], 19: [], 20: [], 21: [], 22: [], 23: [], 24: [], 25: [], 26: [], 27: [], 28: [], 29: [], 30: []}
 
-class ArgVisitor(ast.NodeVisitor):
-    def visit_ClassDef(self, node):
-        self.generic_visit(node)
+    tree = ast.parse(source_code)
 
-    def visit_FunctionDef(self, node):
-        self.generic_visit(node)
+    class ArgVisitor(ast.NodeVisitor):
+        def visit_ClassDef(self, node):
+            self.generic_visit(node)
 
-    def visit_Call(self, node):
-        if isinstance(node.func, ast.Attribute):
-            print(f"    Method Call: {node.func.attr}")
-            layer_name = node.func.attr
-            if layer_name in layerToInt:
-                sub_array = []
-                for arg in node.args:
-                    sub_array.append(arg.value)
-                for keyword in node.keywords:
-                    sub_array.append(keyword.value.value)
-                intToParams[layerToInt[layer_name]].append(sub_array)
-        self.generic_visit(node) 
+        def visit_FunctionDef(self, node):
+            self.generic_visit(node)
+
+        def visit_Call(self, node):
+            if isinstance(node.func, ast.Attribute):
+                print(f"    Method Call: {node.func.attr}")
+                layer_name = node.func.attr
+                if layer_name in layerToInt:
+                    sub_array = []
+                    for arg in node.args:
+                        sub_array.append(arg.value)
+                    for keyword in node.keywords:
+                        sub_array.append(keyword.value.value)
+                    intToParams[layerToInt[layer_name]].append(sub_array)
+            self.generic_visit(node) 
 
 
-visitor = ArgVisitor()
-visitor.visit(tree)
+    visitor = ArgVisitor()
+    visitor.visit(tree)
 
-print(intToParams)
+    print(intToParams)
