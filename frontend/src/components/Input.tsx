@@ -88,6 +88,7 @@ export default function Input() {
                 </option>
               ))}
             </select>
+            <br></br>
             <button
               type="button"
               className="btn btn-primary"
