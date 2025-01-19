@@ -1,57 +1,40 @@
 import ast
 
-source_code = """
-import sys
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import time, tqdm
-
-
-class model(nn.Module):
-    def __init__(self, lr=0.0001, lrDecay=0.95, **kwargs):
-        super(model, self).__init__()
-
-        self.visualModel = None
-        self.audioModel = None
-        self.fusionModel = None
-        self.fcModel = None
-
-        self.loss_fn = nn.CrossEntropyLoss()
+source_code = '''self.loss_fn = nn.CrossEntropyLoss()
 
     def createVisualModel(self):
         self.visualModel = nn.Sequential(
-            nn.Conv2d(1, 64, 3, stride=2, padding=1),
+            nn.Conv2d(1, 64, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.MaxPool2d(2),
-            nn.Conv2d(64, 128, 3, stride=2, padding=1),
+            nn.Conv2d(64, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.Flatten()
         )
 
     def createAudioModel(self):
         self.audioModel = nn.Sequential(
-            nn.Conv2d(1, 64, 3, stride=2, padding=1),
+            nn.Conv2d(1, 64, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.MaxPool2d(2),
-            nn.Conv2d(64, 128, 3, stride=2, padding=1),
+            nn.Conv2d(64, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.Flatten()
         )
 

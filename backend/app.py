@@ -1,62 +1,46 @@
-# from flask import Flask, request
-# from flask_cors import CORS
-from parse_data import parse_function
+from flask import Flask, request
+from flask_cors import CORS
+from calculator import Calculator
+from parser import parse_function
 
-# app = Flask(__name__) 
-# CORS(app)
+app = Flask(__name__) 
+CORS(app)
 
-dummy_data = '''
-import sys
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import time, tqdm
-
-
-class model(nn.Module):
-    def __init__(self, lr=0.0001, lrDecay=0.95, **kwargs):
-        super(model, self).__init__()
-
-        self.visualModel = None
-        self.audioModel = None
-        self.fusionModel = None
-        self.fcModel = None
-
-        self.loss_fn = nn.CrossEntropyLoss()
+dummy_data = '''self.loss_fn = nn.CrossEntropyLoss()
 
     def createVisualModel(self):
         self.visualModel = nn.Sequential(
-            nn.Conv2d(1, 64, 3, stride=2, padding=1),
+            nn.Conv2d(1, 64, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.MaxPool2d(2),
-            nn.Conv2d(64, 128, 3, stride=2, padding=1),
+            nn.Conv2d(64, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.Flatten()
         )
 
     def createAudioModel(self):
         self.audioModel = nn.Sequential(
-            nn.Conv2d(1, 64, 3, stride=2, padding=1),
+            nn.Conv2d(1, 64, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.MaxPool2d(2),
-            nn.Conv2d(64, 128, 3, stride=2, padding=1),
+            nn.Conv2d(64, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2),
-            nn.Conv2d(128, 128, 3, stride=2, padding=1),
+            nn.Conv2d(128, 128, 3, padding=1),
             nn.Flatten()
         )
 
@@ -70,14 +54,15 @@ class model(nn.Module):
             nn.Linear(1024, 128),
             nn.ReLU(),
             nn.Linear(128, 2)
-        )
-'''
+        )'''
+
 
 def calculate_energy(data):
-    parse_function(data)
-    # total_flops = 20 * 10**10 #replace with their function, which outputs total flops
-    # energy = ((total_flops / 10**9) / float(data['gpu'])) * (float(data['datasetSize']) / float(data['batchSize']))
-    # return {"energy": energy}
+    parsed_data = parse_function(data)
+    calculator = Calculator(parsed_data, data['batchSize'])
+    total_flops = calculator.calculate()
+    energy = ((total_flops / 10**9) / float(data['gpu'])) * (float(data['datasetSize']) / float(data['batchSize']))
+    return {"energy": energy}
   
 # @app.route('/calculate', methods=['POST']) 
 # def get_calculation():
