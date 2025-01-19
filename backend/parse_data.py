@@ -98,3 +98,5 @@ def parse_function(source_code):
     visitor.visit(tree)
 
     return intToParams
+
+parse_function(source_code)
