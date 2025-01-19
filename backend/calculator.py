@@ -169,7 +169,7 @@ class Calculator:
         Calculate the approximate number of FLOPs for a batch normalization layer (forward + backward).
 
         Args:
-        - batchSize (int): Number of samples in the batch.
+        - batch_size (int): Number of samples in the batch.
         - numFeatures (int): Number of features per sample (e.g., channels x spatial dimensions).
 
         Returns:
@@ -177,13 +177,13 @@ class Calculator:
     """
 
     def batch_norm_1d_flops(self, numFeatures):
-        return 2 * self.batchSize * numFeatures
+        return 2 * self.batch_size * numFeatures
 
     def batch_norm_2d_flops(self, channels, height, width):
-        return 2 * self.batchSize * channels * height * width
+        return 2 * self.batch_size * channels * height * width
 
     def layer_norm_flops(self, seqLength, embedDim):
-        return 2 * self.batchSize * seqLength * embedDim
+        return 2 * self.batch_size * seqLength * embedDim
 
     """
         Approximate FLOPs for a Dropout layer (forward + backward).
@@ -216,7 +216,7 @@ class Calculator:
         assumes a naive multiplication-based approach.
         
         Args:
-        - batchSize (int): Number of samples in the batch.
+        - batch_size (int): Number of samples in the batch.
         - seqLength (int): Number of tokens or elements in each sample.
         - embedDim (int): Size of each embedding vector.
         
@@ -244,7 +244,7 @@ class Calculator:
         
         Args:
         - lossType (str): 'mse', 'mae', 'crossentropy', 'hinge', or 'kl'
-        - BATCHSIZE (int): Number of samples in the batch
+        - batch_size (int): Number of samples in the batch
         - outputSize (int): Number of outputs per sample
         
         Returns:
@@ -282,47 +282,46 @@ class Calculator:
                         self.total_flops += self.conv_layer_2d(*params)
                     case 3:
                         self.total_flops += self.conv_layer_3d(*params)
-            
-                    # case 4:
-                    #     self.total_flops += pooling_layer_1d(*params)
-                    # case 5:
-                    #     self.total_flops += pooling_layer_2d(*params)
-                    # case 6:
-                    #     self.total_flops += pooling_layer_3d(*params)
-                    # case 7:
-                    #     self.total_flops += pooling_layer_1d(*params)
-                    # case 8:
-                    #     self.total_flops += pooling_layer_2d(*params)
-                    # case 9:
-                    #     self.total_flops += pooling_layer_3d(*params)
-                    # case 10:
-                    #     self.total_flops += rnn_layer(*params)
-                    # case 11:
-                    #     self.total_flops += lstm_layer(*params)
-                    # case 12:
-                    #     self.total_flops += gru_layer(*params)
-                    # case 13:
-                    #     self.total_flops += relu_activation(*params)
-                    # case 14:
-                    #     self.total_flops += sigmoid_activation(*params)
-                    # case 15:
-                    #     self.total_flops += tanh_activation(*params)
-                    # case 16:
-                    #     self.total_flops += batch_norm_1d_flops(*params)
-                    # case 17:
-                    #     self.total_flops += batch_norm_2d_flops(*params)
-                    # case 18:
-                    #     self.total_flops += layer_norm_flops(*params)
-                    # case 19:
+                    case 4:
+                        self.total_flops += self.pooling_layer_1d(*params)
+                    case 5:
+                        self.total_flops += self.pooling_layer_2d(*params)
+                    case 6:
+                        self.total_flops += self.pooling_layer_3d(*params)
+                    case 7:
+                        self.total_flops += self.pooling_layer_1d(*params)
+                    case 8:
+                        self.total_flops += self.pooling_layer_2d(*params)
+                    case 9:
+                        self.total_flops += self.pooling_layer_3d(*params)
+                    case 10:
+                        self.total_flops += self.rnn_layer(*params)
+                    case 11:
+                        self.total_flops += self.lstm_layer(*params)
+                    case 12:
+                        self.total_flops += self.gru_layer(*params)
+                    case 13:
+                        self.total_flops += self.relu_activation(*params)
+                    case 14:
+                        self.total_flops += self.sigmoid_activation(*params)
+                    case 15:
+                        self.total_flops += self.tanh_activation(*params)
+                    case 16:
+                        self.total_flops += self.batch_norm_1d_flops(*params)
+                    case 17:
+                        self.total_flops += self.batch_norm_2d_flops(*params)
+                    case 18:
+                        self.total_flops += self.layer_norm_flops(*params)
+                    case 19:
 
                     # case 20:
 
                     # case 21:
 
                     # case 22:
-                    #     self.total_flops += flatten_layer(*params)
-                    # case 23:
-                    #     self.total_flops += embedding_layer(*params)
+                        self.total_flops += self.flatten_layer(*params)
+                    case 23:
+                        self.total_flops += self.embedding_layer(*params)
                     # case 24:
 
                     # case 25:
