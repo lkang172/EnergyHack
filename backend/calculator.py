@@ -78,19 +78,19 @@ class Calculator:
 
     def pooling_layer_1d(self, kernel_size, stride=1, padding=0):
         output_length = ((self.input_length - kernel_size + 2 * padding) // stride) + 1
-        flops = kernel_size * output_length
+        flops = kernel_size * output_length * 2
 
         return flops
 
     def pooling_layer_2d(self, kernel_size, stride=1, padding=0):
         output_length = ((self.input_length - kernel_size + 2 * padding) // stride) + 1
-        flops = kernel_size*2 * output_length
+        flops = kernel_size*2 * output_length * 2
 
         return flops
 
     def pooling_layer_3d(self, kernel_size, stride=1, padding=0):
         output_length = ((self.input_length - kernel_size + 2 * padding) // stride) + 1
-        flops = kernel_size**3 * output_length
+        flops = kernel_size**3 * output_length * 2
 
         return flops
 
@@ -177,13 +177,13 @@ class Calculator:
     """
 
     def batch_norm_1d_flops(self, numFeatures):
-        return 2 * self.batch_size * numFeatures
+        return 2 * self.batch_size * numFeatures * self.input_length
 
     def batch_norm_2d_flops(self, numFeatures):
-        return 2 * self.batch_size * numFeatures **2
+        return 2 * self.batch_size * numFeatures **2 * self.input_length
 
     def batch_norm_3d_flops(self, numFeatures):
-        return 2 * self.batch_size * numFeatures ** 3
+        return 2 * self.batch_size * numFeatures ** 3 *self.input_length
 
     """
         Approximate FLOPs for a Dropout layer (forward + backward).
@@ -197,14 +197,7 @@ class Calculator:
     def dropout_layer(self):
         flops = 3 * self.output_size
         return flops
-    
-    def dropout_layer(self):
-        flops = 3 * self.output_size
-        return flops
-    
-    def dropout_layer(self):
-        flops = 3 * self.output_size
-        return flops
+
 
     """
         Flatten typically has no compute cost (it's just a reshape).
@@ -244,8 +237,6 @@ class Calculator:
         Returns:
         - flops (int): Number of FLOPs.
     """
-    def flatten_layer(self, *args):
-        return 0
 
     """
         Approximate FLOPs for common loss functions (forward + backward).
