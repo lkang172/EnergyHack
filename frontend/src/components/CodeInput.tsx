@@ -3,7 +3,7 @@ import "../App.css";
 const CodeInput = ({ onChange }: any) => {
   return (
     <>
-      <textarea onChange={onChange} placeholder="//paste code here"></textarea>
+      <textarea onChange={onChange} placeholder="# paste code here"></textarea>
     </>
   );
 };
