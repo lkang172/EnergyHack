@@ -101,9 +101,9 @@ export default function Input() {
               {response != null && (
                 <>
                   <p>Total energy: {response.energy} watts</p>
-                  <p>Total carbon emissions: {response.energy * carbon} gCo</p>
+                  <p>Total carbon emissions: {response.energy * carbon} gCO</p>
                   <p>
-                    That's equal to {response.energy / 25000000} Taylor Swift
+                    That's equal to {response.energy / 1214} days worth of energy for an average American home, or {response.energy / 25000000} Taylor Swift
                     Eras Tours!
                   </p>
                 </>

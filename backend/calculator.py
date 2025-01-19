@@ -22,7 +22,7 @@ class Calculator:
     """
     def dense_layer(self, input_size, output_size):
         self.output_size = output_size
-        macs = input_size * output_size
+        macs = input_size * self.output_size
         flops = 2 * macs 
         return flops
 
@@ -52,7 +52,7 @@ class Calculator:
         output_length = ((self.input_length - kernel_size + 2 * padding) // stride) + 1
         macs = (kernel_size ** 2) * input_channels * output_length * output_channels
         flops = 2 * macs
-
+        print(flops)
         return flops
 
     def conv_layer_3d(self, input_channels, output_channels, kernel_size, stride=1, padding=0):
@@ -318,8 +318,8 @@ class Calculator:
                         self.total_flops += self.batch_norm_1d_flops(*params)
                     case 17:
                         self.total_flops += self.batch_norm_2d_flops(*params)
-                    case 18:
-                        self.total_flops += self.layer_norm_flops(*params)
+                    # case 18:
+                    #     self.total_flops += self.layer_norm_flops(*params)
                     case 19:
                         self.total_flops += self.dropout_layer(*params)
                     case 20:
