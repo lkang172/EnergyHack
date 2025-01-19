@@ -22,6 +22,18 @@ class NeuralNet(nn.Module):
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size, num_classes)
+        nn.Linear(59648, 2048),  
+        nn.ReLU(),
+        nn.BatchNorm2d(2048),
+        nn.Linear(2048, 4096),
+        nn.ReLU(),
+        nn.BatchNorm2d(1024),
+        nn.Linear(1024, 512),
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Linear(128, 64),
+        nn.ReLU(),
+        nn.BatchNorm2d(64)
 
     def forward(self, x):
         x = self.fc1(x)
@@ -96,6 +108,20 @@ def parse_function(source_code):
     tree = ast.parse(source_code)
 
     class ArgVisitor(ast.NodeVisitor):
+        def __init__(self):
+            self.variables = {}
+        
+        def visit_Assign(self, node):
+            for target in node.targets:
+                if isinstance(target, ast.Name):  
+                    var_name = target.id
+                    if isinstance(node.value, ast.Constant):
+                        var_value = node.value.value  
+                    else:
+                        var_value = ast.dump(node.value)
+                    self.variables[var_name] = var_value
+            self.generic_visit(node)
+
         def visit_ClassDef(self, node):
             self.generic_visit(node)
 
@@ -103,6 +129,7 @@ def parse_function(source_code):
             self.generic_visit(node)
 
         def visit_Call(self, node):
+            
             if isinstance(node.func, ast.Attribute):
                 # print(f"    Method Call: {node.func.attr}")
                 layer_name = node.func.attr
@@ -112,19 +139,20 @@ def parse_function(source_code):
                         if isinstance(arg, ast.Constant):
                             sub_array.append(arg.value)
                         elif isinstance(arg, ast.Name):
-                            sub_array.append(arg.id)
+                            sub_array.append(self.variables[arg.id])
                     for keyword in node.keywords:
-                        if isinstance(arg, ast.Constant):
+                        if isinstance(keyword, ast.Constant):
                             sub_array.append(keyword.value.value)
-                        elif isinstance(arg, ast.Name):
-                            sub_array.append(keyword.value.value)
+                        elif isinstance(keyword.value, ast.Name):
+                            sub_array.append(self.variables[keyword.value.id])
                     intToParams[layerToInt[layer_name]].append(sub_array)
             self.generic_visit(node) 
 
 
+    
     visitor = ArgVisitor()
     visitor.visit(tree)
-
+    #print(visitor.variables)
     return intToParams
 
-# parse_function(source_code)
+parse_function(source_code)

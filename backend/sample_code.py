@@ -40,7 +40,20 @@ def createAudioModel(self):
     )
 
 def createFusionModel(self):
-    pass
+    self.fusionModel = nn.Sequential(
+        nn.Linear(59648, 2048),  
+        nn.ReLU(),
+        nn.BatchNorm1d(2048),
+        nn.Linear(2048, 1024),
+        nn.ReLU(),
+        nn.BatchNorm1d(1024),
+        nn.Linear(1024, 512),
+        nn.ReLU(),
+        nn.BatchNorm1d(512),
+        nn.Linear(512, 256),
+        nn.ReLU(),
+        nn.BatchNorm1d(256)
+    )
 
 def createFCModel(self):
     self.fcModel = nn.Sequential(
@@ -53,7 +66,8 @@ def createFCModel(self):
 '''
 
 # Sample 2
-'''import torch
+'''
+import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms
@@ -74,6 +88,19 @@ class NeuralNet(nn.Module):
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size, num_classes)
+        nn.Linear(59648, 2048),  
+        nn.ReLU(),
+        nn.BatchNorm1d(2048),
+        nn.Linear(2048, 1024),
+        nn.ReLU(),
+        nn.BatchNorm1d(1024),
+        nn.Linear(1024, 512),
+        nn.ReLU(),
+        nn.BatchNorm1d(512),
+        nn.Linear(512, 256),
+        nn.ReLU(),
+        nn.BatchNorm1d(256)
+        
 
     def forward(self, x):
         x = self.fc1(x)
@@ -224,4 +251,110 @@ with torch.no_grad():
     test_accuracy_percentage = 100 * total_correct_predictions / total_test_samples
     print(f"Test Accuracy: {test_accuracy_percentage:.2f}%")
 
+'''
+'''
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+
+# Device configuration
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# Hyperparameters
+num_classes = 10  # Digits 0-9
+batch_size = 64
+learning_rate = 0.001
+num_epochs = 5
+
+# Define a 2D CNN
+class CNN(nn.Module):
+    def __init__(self, num_classes):
+        super(CNN, self).__init__()
+        self.conv_layers = nn.Sequential(
+            nn.Conv2d(1, 32, 3, stride=1, padding=1),  # Output: 32x28x28
+            nn.ReLU(),
+            nn.BatchNorm2d(32),
+            nn.MaxPool2d(2, stride=2),  # Output: 32x14x14
+
+            nn.Conv2d(32, 64, 3, stride=1, padding=1),  # Output: 64x14x14
+            nn.ReLU(),
+            nn.BatchNorm2d(64),
+            nn.MaxPool2d(2, stride=2),  # Output: 64x7x7
+
+            nn.Conv2d(64, 128, 3, stride=1, padding=1),  # Output: 128x7x7
+            nn.ReLU(),
+            nn.BatchNorm2d(128),
+            nn.MaxPool2d(2, stride=2)  # Output: 128x3x3
+        )
+        self.fc_layers = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(128 * 3 * 3, 256),  # Output: 256
+            nn.ReLU(),
+            nn.BatchNorm1d(256),
+            nn.Linear(256, 128),  # Output: 128
+            nn.ReLU(),
+            nn.Linear(128, num_classes)  # Output: 10 (num_classes)
+        )
+
+    def forward(self, x):
+        x = self.conv_layers(x)
+        x = self.fc_layers(x)
+        return x
+
+# Load MNIST dataset
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+train_dataset = datasets.MNIST(root='./data', train=True, transform=transform, download=True)
+test_dataset = datasets.MNIST(root='./data', train=False, transform=transform, download=True)
+
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
+
+# Initialize the network, loss function, and optimizer
+model = CNN(num_classes).to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# Training loop
+print("Training the model...")
+for epoch in range(num_epochs):
+    model.train()
+    for i, (images, labels) in enumerate(train_loader):
+        images = images.to(device)  # Shape: [batch_size, 1, 28, 28]
+        labels = labels.to(device)
+
+        # Forward pass
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+
+        # Backward pass and optimization
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if (i + 1) % 100 == 0:
+            print(f"Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], Loss: {loss.item():.4f}")
+
+# Testing loop
+print("Testing the model...")
+model.eval()
+with torch.no_grad():
+    correct = 0
+    total = 0
+    for images, labels in test_loader:
+        images = images.to(device)
+        labels = labels.to(device)
+
+        outputs = model(images)
+        _, predicted = torch.max(outputs, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+    accuracy = 100 * correct / total
+    print(f"Test Accuracy: {accuracy:.2f}%")
 '''

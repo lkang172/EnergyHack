@@ -3,7 +3,7 @@ class Calculator:
     def __init__(self, intToParams, batch_size):     
         self.intToParams = intToParams
         self.input_length = 10000
-        self.output_size = 0
+        self.output_size = 128
         self.batch_size = batch_size
         self.layerToInt = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 4, "MaxPool2d": 5, "MaxPool3d": 6, "AvgPool1d": 7, "AvgPool2d": 8, "AvgPool3d": 9, 
             "RNN": 10, "LSTM" : 11, "GRU": 12, "ReLU": 13, "Sigmoid" : 14, "Tanh" : 15, "BatchNorm1d": 16, "BatchNorm2d": 17, "LayerNorm": 18,
@@ -20,7 +20,7 @@ class Calculator:
         Returns:
         - flops (int): Number of FLOPs
     """
-    def dense_layer(self, input_size, output_size):
+    def dense_layer(self, input_size, output_size=128):
         self.output_size = output_size
         macs = input_size * output_size
         flops = 2 * macs 
@@ -346,5 +346,3 @@ class Calculator:
                     # case 30:
                     #     self.total_flops += self.BCELoss(*params)
         return self.total_flops
-
-
