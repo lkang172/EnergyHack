@@ -127,4 +127,4 @@ def parse_function(source_code):
 
     return intToParams
 
-parse_function(source_code)
+# parse_function(source_code)
