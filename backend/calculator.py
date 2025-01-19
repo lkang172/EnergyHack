@@ -3,7 +3,7 @@ class Calculator:
     def __init__(self, intToParams, batch_size):     
         self.intToParams = intToParams
         self.input_length = 10000
-        self.output_size = 0
+        self.output_size = 128
         self.batch_size = batch_size
         self.layerToInt = {"Linear": 0, "Conv1d": 1, "Conv2d": 2, "Conv3d": 3, "MaxPool1d": 4, "MaxPool2d": 5, "MaxPool3d": 6, "AvgPool1d": 7, "AvgPool2d": 8, "AvgPool3d": 9, 
             "RNN": 10, "LSTM" : 11, "GRU": 12, "ReLU": 13, "Sigmoid" : 14, "Tanh" : 15, "BatchNorm1d": 16, "BatchNorm2d": 17, "LayerNorm": 18,
@@ -20,7 +20,7 @@ class Calculator:
         Returns:
         - flops (int): Number of FLOPs
     """
-    def dense_layer(self, input_size, output_size):
+    def dense_layer(self, input_size, output_size=128):
         self.output_size = output_size
         macs = input_size * self.output_size
         flops = 2 * macs 
@@ -78,19 +78,19 @@ class Calculator:
 
     def pooling_layer_1d(self, kernel_size, stride=1, padding=0):
         output_length = ((self.input_length - kernel_size + 2 * padding) // stride) + 1
-        flops = kernel_size * output_length
+        flops = kernel_size * output_length * 2
 
         return flops
 
     def pooling_layer_2d(self, kernel_size, stride=1, padding=0):
         output_length = ((self.input_length - kernel_size + 2 * padding) // stride) + 1
-        flops = kernel_size*2 * output_length
+        flops = kernel_size*2 * output_length * 2
 
         return flops
 
     def pooling_layer_3d(self, kernel_size, stride=1, padding=0):
         output_length = ((self.input_length - kernel_size + 2 * padding) // stride) + 1
-        flops = kernel_size**3 * output_length
+        flops = kernel_size**3 * output_length * 2
 
         return flops
 
@@ -177,13 +177,13 @@ class Calculator:
     """
 
     def batch_norm_1d_flops(self, numFeatures):
-        return 2 * self.batchSize * numFeatures
+        return 2 * self.batch_size * numFeatures * self.input_length
 
     def batch_norm_2d_flops(self, numFeatures):
-        return 2 * self.batchSize * numFeatures **2
+        return 2 * self.batch_size * numFeatures **2 * self.input_length
 
     def batch_norm_3d_flops(self, numFeatures):
-        return 2 * self.batchSize * numFeatures ** 3
+        return 2 * self.batch_size * numFeatures ** 3 *self.input_length
 
     """
         Approximate FLOPs for a Dropout layer (forward + backward).
@@ -197,14 +197,7 @@ class Calculator:
     def dropout_layer(self):
         flops = 3 * self.output_size
         return flops
-    
-    def dropout_layer(self):
-        flops = 3 * self.output_size
-        return flops
-    
-    def dropout_layer(self):
-        flops = 3 * self.output_size
-        return flops
+
 
     """
         Flatten typically has no compute cost (it's just a reshape).
@@ -244,8 +237,6 @@ class Calculator:
         Returns:
         - flops (int): Number of FLOPs.
     """
-    def flatten_layer(self, *args):
-        return 0
 
     """
         Approximate FLOPs for common loss functions (forward + backward).
@@ -346,5 +337,3 @@ class Calculator:
                     case 30:
                         self.total_flops += BCELoss(*params)
         return self.total_flops
-
-

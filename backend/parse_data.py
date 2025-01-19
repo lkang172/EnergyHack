@@ -1,54 +1,98 @@
 import ast
 
 source_code = """
-self.loss_fn = nn.CrossEntropyLoss()
-def createVisualModel(self):
-    self.visualModel = nn.Sequential(
-        nn.Conv2d(1, 64, 3, padding=1),
-        nn.ReLU(),
-        nn.BatchNorm2d(64),
-        nn.MaxPool2d(2),
-        nn.Conv2d(64, 128, 3, padding=1),
-        nn.ReLU(),
-        nn.BatchNorm2d(128),
-        nn.MaxPool2d(2),
-        nn.Conv2d(128, 128, 3, padding=1),
-        nn.ReLU(),
-        nn.BatchNorm2d(128),
-        nn.MaxPool2d(2),
-        nn.Conv2d(128, 128, 3, padding=1),
-        nn.Flatten()
-    )
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
 
-def createAudioModel(self):
-    self.audioModel = nn.Sequential(
-        nn.Conv2d(1, 64, 3, padding=1),
+# Hyperparameters
+input_size = 784  # 28x28 pixels
+hidden_size = 128
+num_classes = 10  # Digits 0-9
+batch_size = 64
+learning_rate = 0.01
+num_epochs = 5
+
+# Define a simple feedforward neural network
+class NeuralNet(nn.Module):
+    def __init__(self, input_size, hidden_size, num_classes):
+        super(NeuralNet, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_size, num_classes)
+        nn.Linear(59648, 2048),  
         nn.ReLU(),
-        nn.BatchNorm2d(64),
-        nn.MaxPool2d(2),
-        nn.Conv2d(64, 128, 3, padding=1),
+        nn.BatchNorm2d(2048),
+        nn.Linear(2048, 4096),
+        nn.ReLU(),
+        nn.BatchNorm2d(1024),
+        nn.Linear(1024, 512),
         nn.ReLU(),
         nn.BatchNorm2d(128),
-        nn.MaxPool2d(2),
-        nn.Conv2d(128, 128, 3, padding=1),
+        nn.Linear(128, 64),
         nn.ReLU(),
-        nn.BatchNorm2d(128),
-        nn.MaxPool2d(2),
-        nn.Conv2d(128, 128, 3, padding=1),
-        nn.Flatten()
-    )
+        nn.BatchNorm2d(64)
 
-def createFusionModel(self):
-    pass
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        return x
 
-def createFCModel(self):
-    self.fcModel = nn.Sequential(
-        nn.Linear(29824, 1024),
-        nn.ReLU(),
-        nn.Linear(1024, 128),
-        nn.ReLU(),
-        nn.Linear(128, 2)
-    )
+# Load MNIST dataset
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+train_dataset = datasets.MNIST(root='./data', train=True, transform=transform, download=True)
+test_dataset = datasets.MNIST(root='./data', train=False, transform=transform, download=True)
+
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
+
+# Initialize the network, loss function, and optimizer
+model = NeuralNet(input_size, hidden_size, num_classes).to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# Training loop
+print("Training the model...")
+for epoch in range(num_epochs):
+    model.train()
+    for i, (images, labels) in enumerate(train_loader):
+        # Flatten the images to (batch_size, 784)
+        images = images.view(-1, input_size).to(device)
+        labels = labels.to(device)
+
+        # Forward pass
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+
+        # Backward pass and optimization
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+# Testing loop
+print("Testing the model...")
+model.eval()
+with torch.no_grad():
+    correct = 0
+    total = 0
+    for images, labels in test_loader:
+        images = images.view(-1, input_size).to(device)
+        labels = labels.to(device)
+
+        outputs = model(images)
+        _, predicted = torch.max(outputs, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+    accuracy = 100 * correct / total
+    print(f"Test Accuracy:%")
 """
     
 
@@ -64,6 +108,20 @@ def parse_function(source_code):
     tree = ast.parse(source_code)
 
     class ArgVisitor(ast.NodeVisitor):
+        def __init__(self):
+            self.variables = {}
+        
+        def visit_Assign(self, node):
+            for target in node.targets:
+                if isinstance(target, ast.Name):  
+                    var_name = target.id
+                    if isinstance(node.value, ast.Constant):
+                        var_value = node.value.value  
+                    else:
+                        var_value = ast.dump(node.value)
+                    self.variables[var_name] = var_value
+            self.generic_visit(node)
+
         def visit_ClassDef(self, node):
             self.generic_visit(node)
 
@@ -71,6 +129,7 @@ def parse_function(source_code):
             self.generic_visit(node)
 
         def visit_Call(self, node):
+            
             if isinstance(node.func, ast.Attribute):
                 # print(f"    Method Call: {node.func.attr}")
                 layer_name = node.func.attr
@@ -80,23 +139,21 @@ def parse_function(source_code):
                         if (isinstance(arg, ast.Constant)):
                             print(arg.value)
                             sub_array.append(arg.value)
-                        elif (isinstance(arg, ast.Name)):
-                            print(arg.id)
-                            sub_array.append(arg.id)
+                        elif isinstance(arg, ast.Name):
+                            sub_array.append(self.variables[arg.id])
                     for keyword in node.keywords:
-                        if (isinstance(keyword, ast.Constant)):
-                            print(keyword.value)
-                            sub_array.append(keyword.value)
-                        elif (isinstance(keyword, ast.Name)):
-                            print(keyword.id)
-                            sub_array.append(keyword.id)
+                        if isinstance(keyword, ast.Constant):
+                            sub_array.append(keyword.value.value)
+                        elif isinstance(keyword.value, ast.Name):
+                            sub_array.append(self.variables[keyword.value.id])
                     intToParams[layerToInt[layer_name]].append(sub_array)
             self.generic_visit(node) 
 
 
+    
     visitor = ArgVisitor()
     visitor.visit(tree)
-
+    #print(visitor.variables)
     return intToParams
 
 parse_function(source_code)
