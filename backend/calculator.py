@@ -269,7 +269,8 @@ class Calculator:
         pass
 
     def calculate(self):
-        for layerIndex in self.layerToInt.items():
+        for layerValue, layerIndex in self.layerToInt.items():
+            print(layerIndex)
             params_list = self.intToParams[layerIndex]
             for params in params_list:
                 match layerIndex:

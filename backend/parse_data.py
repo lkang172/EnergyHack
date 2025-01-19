@@ -72,7 +72,7 @@ def parse_function(source_code):
 
         def visit_Call(self, node):
             if isinstance(node.func, ast.Attribute):
-                print(f"    Method Call: {node.func.attr}")
+                # print(f"    Method Call: {node.func.attr}")
                 layer_name = node.func.attr
                 if layer_name in layerToInt:
                     sub_array = []
@@ -87,4 +87,4 @@ def parse_function(source_code):
     visitor = ArgVisitor()
     visitor.visit(tree)
 
-    print(intToParams)
+    return intToParams
