@@ -101,7 +101,7 @@ export default function Input() {
               {response != null && (
                 <>
                   <p>Total energy: {response.energy} watts</p>
-                  <p>Total carbon emissions: {response.energy * carbon} gCo</p>
+                  <p>Total carbon emissions: {response.energy * carbon} gCO</p>
                   <p>
                     That's enough energy to power {response.energy / 1214} average American homes!
                   </p>

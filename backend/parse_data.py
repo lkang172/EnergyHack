@@ -136,7 +136,8 @@ def parse_function(source_code):
                 if layer_name in layerToInt:
                     sub_array = []
                     for arg in node.args:
-                        if isinstance(arg, ast.Constant):
+                        if (isinstance(arg, ast.Constant)):
+                            print(arg.value)
                             sub_array.append(arg.value)
                         elif isinstance(arg, ast.Name):
                             sub_array.append(self.variables[arg.id])
