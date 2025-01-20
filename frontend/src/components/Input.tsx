@@ -45,9 +45,9 @@ export default function Input() {
       <div className="container">
         <div className="container-2">
           <h1>WattsTheMatter</h1>
-          <h4>An web energy calculator for Pytorch Sequential ML models</h4>
+          <h4>A web energy calculator for Pytorch Sequential ML models</h4>
           <CodeInput onChange={(e: any) => setCode(e.target.value)}></CodeInput>
-          <h4><a href="http://localhost:5173/">For more information about our calculations, click here!</a></h4>
+          {/* <h4><a href="http://localhost:5173/">For more information about our calculations, click here!</a></h4> */}
         </div>
         <div className="container-2">
           <center>
@@ -103,8 +103,7 @@ export default function Input() {
                   <p>Total energy: {response.energy} watts</p>
                   <p>Total carbon emissions: {response.energy * carbon} gCo</p>
                   <p>
-                    That's equal to {response.energy / 25000000} Taylor Swift
-                    Eras Tours!
+                    That's enough energy to power {response.energy / 1214} average American homes!
                   </p>
                 </>
               )}

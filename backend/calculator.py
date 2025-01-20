@@ -177,13 +177,13 @@ class Calculator:
     """
 
     def batch_norm_1d_flops(self, numFeatures):
-        return 2 * self.batch_size * numFeatures * self.input_length
+        return 2 * self.batch_size * numFeatures
 
     def batch_norm_2d_flops(self, numFeatures):
-        return 2 * self.batch_size * numFeatures **2 * self.input_length
+        return 2 * self.batch_size * numFeatures **2
 
     def batch_norm_3d_flops(self, numFeatures):
-        return 2 * self.batch_size * numFeatures ** 3 *self.input_length
+        return 2 * self.batch_size * numFeatures ** 3 
 
     """
         Approximate FLOPs for a Dropout layer (forward + backward).
