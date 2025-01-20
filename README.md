@@ -16,3 +16,5 @@ Since the source of energy expenditure when training ML models comes overwhelmin
 
 Once we calculated the total FLOPs for one iteration of the model, we then divided that by a unique FLOPs per watt value dependent on the user's GPU, which determines how many FLOPs can be executed for each watt. Then we apply the batch size and dataset size to find the final amount of watts used. We also put this value into context so that the user can fully comprehend the scale of their ML training.
 
+# Tech Stack:
+Python, JavaScript, TypeScript, React.js, Flask, Fetch API, AST Library
