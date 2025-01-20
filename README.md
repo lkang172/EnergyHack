@@ -1,7 +1,7 @@
 # WattsTheMatter
 
 # Demo
-[!['https://youtu.be/VYcbI79A4LE?si=EKf8YcGQorSxBpM9']]
+'https://youtu.be/VYcbI79A4LE?si=EKf8YcGQorSxBpM9'
 
 # Inspiration
 As the use of AI becomes exponentially widespread in all industries, the massive environmental effects of training machine learning models are often left in the dark. Hearing about how ChatGPT is set to consume more energy than Sweden, Argentina, or the Netherlands by 2027, we were driven to create an easy-to-use tool to predict a model's energy consumption without having to run it first. This would allow the user to optimize their code to achieve the lowest possible environmental impact, all before using energy to run the model in the first place.
