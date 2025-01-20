@@ -18,3 +18,6 @@ Once we calculated the total FLOPs for one iteration of the model, we then divid
 
 # Tech Stack:
 Python, JavaScript, TypeScript, React.js, Flask, Fetch API, AST Library
+
+# To Run:
+Clone repository, install dependencies (flask, flask-cors, ast, npm), cd to frontend and run "npm run dev". Then, cd to backend in another terminal and run "python app.py". Go to localhost and WattsTheMatter will be running!
